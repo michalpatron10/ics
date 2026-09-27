@@ -21,9 +21,9 @@
 
 ## Technical aspects
 
-1. Programing language: Java
+1. Programing language: Java Temurin implementation
 2. Backend frameworks: Spring, Spring Boot, Hibernate
-3. Frontend framework: Angular
+3. Frontend framework: Angular, TypeScript
 3. Build tool: Maven, npm
 4. Database: PostgreSQL
 5. Container service provider: Docker
