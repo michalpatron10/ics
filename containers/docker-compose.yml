@@ -48,7 +48,7 @@ services:
     networks:
       - local
     volumes:
-      - ./my-test-realm-realm.json:/opt/keycloak/data/import/my-test-realm-realm.json
+      - ./ics-realm-realm.json:/opt/keycloak/data/import/ics-realm-realm.json
 
 networks:
   local:
