@@ -6,10 +6,10 @@ import {provideHttpClient} from '@angular/common/http';
 
 
 export const authCodeFlowConfig: AuthConfig = {
-  issuer: 'http://localhost:8180/realms/my-test-realm',
-  tokenEndpoint: 'http://localhost:8180/realms/my-test-realm/protocol/openid-connect/token',
+  issuer: 'http://localhost:8180/realms/ics-realm',
+  tokenEndpoint: 'http://localhost:8180/realms/ics-realm/protocol/openid-connect/token',
   redirectUri: window.location.origin,
-  clientId: 'my-webapp-client',
+  clientId: 'ics-webapp-client',
   responseType: 'code',
   scope: 'openid profile',
   showDebugInformation: true,
