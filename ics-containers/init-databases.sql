@@ -1,0 +1,2 @@
+CREATE DATABASE ics_tenant1;
+CREATE DATABASE ics_tenant2;
