@@ -1,18 +1,24 @@
 server:
-  port: 8488
+  port: 8080
 
 spring:
   application:
     name: ics-backend
 
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8180/realms/ics-realm}
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8180/realms/ics_tenant1}
 
 logging:
   level:
     org:
       springframework:
         security: TRACE
+
+ics:
+  security:
+    trusted-issuers:
+      - http://localhost:8180/realms/ics_tenant1
+      - http://localhost:8180/realms/ics_tenant2

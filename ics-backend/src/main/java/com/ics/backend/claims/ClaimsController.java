@@ -26,6 +26,7 @@ public class ClaimsController {
     }
 
     @PostMapping
+    //@PreAuthorize(value = "hasRole('ROLE_default-roles-ics')")
     public Long createClaim(@RequestBody ClaimDto claim) {
         return claimService.createClaim(claim);
     }

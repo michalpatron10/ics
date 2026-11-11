@@ -21,7 +21,15 @@ public class IcsJwtConverter implements Converter<Jwt, IcsJwtToken> {
         var customJwt = new IcsJwtToken(jwt, authorities);
         customJwt.setFirstname(jwt.getClaimAsString("given_name"));
         customJwt.setLastname(jwt.getClaimAsString("family_name"));
+        customJwt.setTenantId(extractTenantId(jwt.getClaimAsString("iss")));
         return customJwt;
+    }
+
+    private String extractTenantId(String iss) {
+        if (iss == null) {
+            return null;
+        }
+        return iss.substring(iss.lastIndexOf('/') + 1);
     }
 
     private Collection<GrantedAuthority> extractAuthorities(Jwt jwt) {
