@@ -1,26 +1,24 @@
-import {APP_INITIALIZER, ApplicationConfig, provideBrowserGlobalErrorListeners} from '@angular/core';
+import {ApplicationConfig, inject, provideAppInitializer, provideBrowserGlobalErrorListeners} from '@angular/core';
 import {provideRouter} from '@angular/router';
 import {routes} from './app.routes';
-import {AuthConfig, OAuthService, provideOAuthClient} from 'angular-oauth2-oidc';
+import {OAuthService, provideOAuthClient} from 'angular-oauth2-oidc';
 import {provideHttpClient} from '@angular/common/http';
-
-
-export const authCodeFlowConfig: AuthConfig = {
-  issuer: 'http://localhost:8180/realms/ics-realm',
-  tokenEndpoint: 'http://localhost:8180/realms/ics-realm/protocol/openid-connect/token',
-  redirectUri: window.location.origin,
-  clientId: 'ics-webapp-client',
-  responseType: 'code',
-  scope: 'openid profile',
-  showDebugInformation: true,
-};
+import {environment} from '../environments/environment';
 
 function initializeOAuth(oauthService: OAuthService): Promise<void> {
-  return new Promise((resolve) => {
-    oauthService.configure(authCodeFlowConfig);
+  return new Promise((resolve, reject) => {
+    oauthService.configure(environment.authConfig);
     oauthService.setupAutomaticSilentRefresh();
     oauthService.loadDiscoveryDocumentAndLogin()
-      .then(() => resolve());
+      .then((isLoggedIn) => {
+        if (isLoggedIn) {
+          resolve();
+        }
+      })
+      .catch((err) => {
+        window.location.href = '/error.html';
+        reject(err);
+      });
   });
 }
 
@@ -30,17 +28,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     provideOAuthClient(),
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (oauthService: OAuthService) => {
-        return () => {
-          initializeOAuth(oauthService);
-        }
-      },
-      multi: true,
-      deps: [
-        OAuthService
-      ]
-    }
+    provideAppInitializer(() => {
+      const oauthService = inject(OAuthService);
+      return initializeOAuth(oauthService);
+    })
   ]
 };
