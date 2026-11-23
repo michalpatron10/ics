@@ -12,15 +12,13 @@ public final class ClaimMapper {
         if (claim == null) {
             return null;
         }
-
-        ClaimDto claimDto = new ClaimDto();
-        claimDto.setId(claim.getId());
-        claimDto.setClaimNumber(claim.getClaimNumber());
-        claimDto.setClaimStatus(claim.getClaimStatus());
-        claimDto.setClaimType(claim.getClaimType());
-        claimDto.setClaimDescription(claim.getClaimDescription());
-        claimDto.setClaimDate(claim.getClaimDate());
-        return claimDto;
+        return new ClaimDto(
+                claim.getId(),
+                claim.getClaimNumber(),
+                claim.getClaimStatus(),
+                claim.getClaimType(),
+                claim.getClaimDescription(),
+                claim.getClaimDate());
     }
 
     public static Claim toEntity(ClaimDto claimDto) {
@@ -28,13 +26,13 @@ public final class ClaimMapper {
             return null;
         }
 
+        // The ID is assigned on insert, so an ID sent by the client is ignored.
         Claim claim = new Claim();
-        //claim.setId(claimDto.getId());
-        claim.setClaimNumber(claimDto.getClaimNumber());
-        claim.setClaimStatus(claimDto.getClaimStatus());
-        claim.setClaimType(claimDto.getClaimType());
-        claim.setClaimDescription(claimDto.getClaimDescription());
-        claim.setClaimDate(claimDto.getClaimDate());
+        claim.setClaimNumber(claimDto.claimNumber());
+        claim.setClaimStatus(claimDto.claimStatus());
+        claim.setClaimType(claimDto.claimType());
+        claim.setClaimDescription(claimDto.claimDescription());
+        claim.setClaimDate(claimDto.claimDate());
         return claim;
     }
 }

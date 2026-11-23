@@ -1,4 +1,4 @@
-package com.ics.backend.claims.internal.repoository;
+package com.ics.backend.claims.internal.repository;
 
 import com.ics.backend.claims.internal.datamodel.Claim;
 import org.springframework.data.jpa.repository.JpaRepository;

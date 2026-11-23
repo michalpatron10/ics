@@ -5,12 +5,6 @@ spring:
   application:
     name: ics-backend
 
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8180/realms/ics_tenant1}
-
 logging:
   level:
     org:

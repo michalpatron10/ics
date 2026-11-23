@@ -159,7 +159,7 @@ Allowed BPMN constructs: service tasks that reference a registered block; user t
 
 ## 7. Open questions and spikes
 
-1. **Operaton version vs. Spring Boot 4.1 / Java 25.** We have not verified that Operaton ships a Spring Boot 4–compatible starter. Upstream Camunda 7.24.3+ publishes separate `-4` artifacts for Spring Boot 4. Spike: run an Operaton engine in `ics-backend` on the current parent POM. Fallback: move the backend to Spring Boot 3.5 until the starter is available.
+1. **Operaton version vs. Spring Boot 4.2 / Java 26.** We have not verified that Operaton ships a Spring Boot 4–compatible starter. Upstream Camunda 7.24.3+ publishes separate `-4` artifacts for Spring Boot 4. Spike: run an Operaton engine in `ics-backend` on the current parent POM. Fallback: move the backend to Spring Boot 3.5 until the starter is available.
 2. **Engine per tenant: cost.** Each engine has its own job executor and caches. Measure memory and connection use at about 20 tenants. Consider a shared job executor thread pool with per-engine acquisition.
 3. **Transactions.** Confirm that engine commands and JPA writes in a delegate share one transaction and one connection (see ADR-0003).
 4. **Keycloak realm per tenant vs. Organizations.** Keycloak 26 Organizations would allow a single realm. That makes cross-tenant users (partners, adjusters working for several insurers) easier, but tenant isolation becomes a claim check rather than an issuer check. The current code and this proposal use a realm per tenant. Revisit if cross-tenant users become a requirement. Also upgrade Keycloak (docker-compose pins 22.0).

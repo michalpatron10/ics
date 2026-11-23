@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IcsBackendApplication {
+public class IcsApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(IcsBackendApplication.class, args);
+    static void main(String[] args) {
+        SpringApplication.run(IcsApplication.class, args);
     }
 
 }

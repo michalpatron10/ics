@@ -1,8 +1,7 @@
 package com.ics.backend.claims;
 
 import com.ics.backend.claims.internal.dto.ClaimDto;
-import com.ics.backend.claims.internal.service.ClaimServiceInterface;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.ics.backend.claims.internal.service.ClaimService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/claims")
 public class ClaimsController {
 
-    private final ClaimServiceInterface claimService;
+    private final ClaimService claimService;
 
-    public ClaimsController(ClaimServiceInterface claimService) {
+    public ClaimsController(ClaimService claimService) {
         this.claimService = claimService;
     }
 
@@ -26,7 +25,6 @@ public class ClaimsController {
     }
 
     @PostMapping
-    //@PreAuthorize(value = "hasRole('ROLE_default-roles-ics')")
     public Long createClaim(@RequestBody ClaimDto claim) {
         return claimService.createClaim(claim);
     }

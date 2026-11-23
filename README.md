@@ -21,8 +21,8 @@
 
 ## Technical aspects
 
-1. Programing language: Java Temurin implementation
-2. Backend frameworks: Spring, Spring Boot, Hibernate
+1. Programing language: Java 26
+2. Backend frameworks: Spring, Spring Boot 4.2, Spring Modulith, Hibernate
 3. Frontend framework: Angular, TypeScript
 3. Build tool: Maven, npm
 4. Database: PostgreSQL
@@ -42,7 +42,7 @@ Target layout. Items marked *(planned)* don't exist yet.
 
 ```
 ics/
-├── pom.xml                         # (planned) Maven aggregator for backend + gateway (shared versions/BOMs)
+├── pom.xml                         # Maven aggregator for backend + gateway (shared versions/BOMs)
 ├── architecture/                   # architecture overview + decisions/ (ADRs)
 ├── ics-backend/                    # Spring Modulith app
 │   └── src/main/

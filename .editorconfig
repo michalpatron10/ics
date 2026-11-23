@@ -1,0 +1,27 @@
+# Editor settings shared through the repo (https://editorconfig.org). IntelliJ applies them automatically.
+# The Java settings mirror the Spotless rules in the root pom.xml, so IntelliJ's "Optimize Imports" and
+# "Reformat Code" produce code that passes `./mvnw verify`. ics-webapp/ has its own .editorconfig.
+root = true
+
+[*.java]
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# No wildcard imports
+ij_java_class_count_to_use_import_on_demand = 999
+ij_java_names_count_to_use_import_on_demand = 999
+
+# One block of regular imports, blank line, static imports
+ij_java_imports_layout = *, |, $*
+ij_java_layout_static_imports_separately = true
+
+# Exactly one blank line after package, at most one blank line in a row
+ij_java_blank_lines_before_package = 0
+ij_java_blank_lines_after_package = 1
+ij_java_blank_lines_before_imports = 1
+ij_java_keep_blank_lines_in_code = 1
+ij_java_keep_blank_lines_in_declarations = 1
+ij_java_keep_blank_lines_before_right_brace = 1

@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -23,16 +25,14 @@ import org.springframework.security.oauth2.server.resource.web.authentication.Be
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain (HttpSecurity http,
-                                            SecurityProperties securityProperties) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+            SecurityProperties securityProperties) throws Exception {
 
         JwtIssuerAuthenticationManagerResolver issuerAuthenticationManagerResolver = JwtIssuerAuthenticationManagerResolver
                 .fromTrustedIssuers(securityProperties.getTrustedIssuers());
@@ -40,7 +40,7 @@ public class SecurityConfig {
         AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver = request -> {
             AuthenticationManager delegate = issuerAuthenticationManagerResolver.resolve(request);
             return authentication -> {
-                var authenticated = delegate.authenticate(authentication);
+                Authentication authenticated = delegate.authenticate(authentication);
                 if (authenticated instanceof JwtAuthenticationToken jwtAuthentication) {
                     return customJwtConverter().convert(jwtAuthentication.getToken());
                 }
@@ -62,19 +62,25 @@ public class SecurityConfig {
         return new IcsJwtConverter();
     }
 
-    @Bean
-    public OncePerRequestFilter tenantContextFilter() {
+    // Deliberately not a @Bean: Spring Boot would also register it as a servlet filter that runs
+    // before the security chain, finds no authentication, and is then skipped inside the chain
+    // (OncePerRequestFilter), so the tenant would never be set.
+    private OncePerRequestFilter tenantContextFilter() {
         return new OncePerRequestFilter() {
             @Override
             protected void doFilterInternal(
                     HttpServletRequest request,
                     HttpServletResponse response,
-                    FilterChain filterChain
-            ) throws ServletException, IOException {
+                    FilterChain filterChain) throws ServletException, IOException {
                 try {
-                    var authentication = SecurityContextHolder.getContext().getAuthentication();
+                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                     if (authentication instanceof IcsJwtToken jwt) {
-                        TenantContext.setCurrentTenant(jwt.getTenantId());
+                        String tenantId = jwt.getTenantId();
+                        if (tenantId == null || tenantId.isBlank()) {
+                            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Token does not carry a tenant");
+                            return;
+                        }
+                        TenantContext.setCurrentTenant(tenantId);
                     }
                     filterChain.doFilter(request, response);
                 } finally {
@@ -84,4 +90,3 @@ public class SecurityConfig {
         };
     }
 }
-
