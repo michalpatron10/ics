@@ -27,7 +27,8 @@ public class MultitenantConfiguration {
             propertyFiles = new PathMatchingResourcePatternResolver()
                     .getResources("classpath*:db/connections/*.properties");
         } catch (IOException exp) {
-            throw new IllegalStateException("Unable to find tenant datasource properties at db/connections/*.properties", exp);
+            throw new IllegalStateException(
+                    "Unable to find tenant datasource properties at db/connections/*.properties", exp);
         }
         if (propertyFiles.length == 0) {
             throw new IllegalStateException("No tenant datasource properties found at db/connections/*.properties");
@@ -40,15 +41,18 @@ public class MultitenantConfiguration {
             try (InputStream inputStream = propertyFile.getInputStream()) {
                 tenantProperties.load(inputStream);
             } catch (IOException exp) {
-                throw new IllegalStateException("Unable to load tenant datasource properties from " + propertyFile.getDescription(), exp);
+                throw new IllegalStateException(
+                        "Unable to load tenant datasource properties from " + propertyFile.getDescription(), exp);
             }
 
             String tenantId = tenantProperties.getProperty("name");
             if (tenantId == null || tenantId.isBlank()) {
-                throw new IllegalStateException("Tenant datasource property 'name' is missing in " + propertyFile.getDescription());
+                throw new IllegalStateException(
+                        "Tenant datasource property 'name' is missing in " + propertyFile.getDescription());
             }
             if (resolvedDataSources.containsKey(tenantId)) {
-                throw new IllegalStateException("Duplicate tenant datasource name '" + tenantId + "' in " + propertyFile.getDescription());
+                throw new IllegalStateException(
+                        "Duplicate tenant datasource name '" + tenantId + "' in " + propertyFile.getDescription());
             }
 
             DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
@@ -61,7 +65,8 @@ public class MultitenantConfiguration {
 
         DataSource defaultDataSource = (DataSource) resolvedDataSources.get(defaultTenant);
         if (defaultDataSource == null) {
-            throw new IllegalStateException("Default tenant datasource '" + defaultTenant + "' was not found in db/connections/*.properties");
+            throw new IllegalStateException(
+                    "Default tenant datasource '" + defaultTenant + "' was not found in db/connections/*.properties");
         }
 
         AbstractRoutingDataSource dataSource = new MultitenantDataSource();

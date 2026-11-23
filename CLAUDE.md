@@ -26,6 +26,7 @@ Backend (from the repo root, use `mvnw.cmd` on Windows). The root `pom.xml` is a
 ./mvnw test
 ./mvnw test -Dtest=ModularityTest
 ./mvnw test -Dtest=IcsJwtConverterTest#extractsTenantIdFromIssuerUrl
+./mvnw spotless:apply   # format code (Spotless, Eclipse formatter); `./mvnw verify` fails on unformatted code
 ```
 `IcsApplicationTest` is a full `@SpringBootTest`, so it needs Postgres running. `ModularityTest` holds the Spring Modulith `ApplicationModules.verify()` check and needs no infrastructure.
 
@@ -39,9 +40,10 @@ Prettier config is in `.prettierrc`.
 
 ## Backend architecture
 
-**Code style.**
+**Code style.** Formatting, import order and the wildcard-import ban are enforced by Spotless (root `pom.xml`, formatter settings in `eclipse-formatter.prefs`): run `./mvnw spotless:apply` before committing. The rest are review rules.
 - Never use wildcard imports (`import jakarta.persistence.*;`, `import static ...Assertions.*;`). Import each class or static member explicitly.
 - Exactly one blank line between the `package` statement and the imports.
+- Import order: one alphabetical block of regular imports, one blank line, then static imports (tests only).
 - In tests, use static imports for assertions and other test helpers: `assertThat(...)`, not `Assertions.assertThat(...)`. Import each method explicitly (`import static org.assertj.core.api.Assertions.assertThat;`), never with `*`. Outside tests, don't use static imports.
 - No commented-out code; git keeps the history. Comments explain *why*, not what. Postponed work is a `// TODO <reason>`.
 - Naming: no `Interface` suffix (and no interface at all while there is a single implementation), camelCase for variables, no raw generic types (`List<?>`, not `List`).

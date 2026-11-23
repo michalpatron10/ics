@@ -15,6 +15,7 @@
         <springframework.boot.version>4.2.0</springframework.boot.version>
         <spring-modulith.version>2.1.1</spring-modulith.version>
         <postgresql.version>42.7.14</postgresql.version>
+        <spotless.version>3.11.0</spotless.version>
     </properties>
 
     <!-- Aggregator for deployables (backend now, gateway later). Backend modules are Spring Modulith
@@ -79,6 +80,35 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <!-- Code style (see CLAUDE.md "Code style"). `./mvnw spotless:apply` formats,
+                 `./mvnw verify` fails when a file is not formatted. -->
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless.version}</version>
+                <configuration>
+                    <java>
+                        <eclipse>
+                            <file>${maven.multiModuleProjectDirectory}/eclipse-formatter.prefs</file>
+                        </eclipse>
+                        <!-- One block of regular imports, then one block of static imports. -->
+                        <importOrder>
+                            <order>,\#</order>
+                        </importOrder>
+                        <removeUnusedImports/>
+                        <forbidWildcardImports/>
+                    </java>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
 </project>

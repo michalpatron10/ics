@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -31,8 +31,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain (HttpSecurity http,
-                                            SecurityProperties securityProperties) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+            SecurityProperties securityProperties) throws Exception {
 
         JwtIssuerAuthenticationManagerResolver issuerAuthenticationManagerResolver = JwtIssuerAuthenticationManagerResolver
                 .fromTrustedIssuers(securityProperties.getTrustedIssuers());
@@ -71,8 +71,7 @@ public class SecurityConfig {
             protected void doFilterInternal(
                     HttpServletRequest request,
                     HttpServletResponse response,
-                    FilterChain filterChain
-            ) throws ServletException, IOException {
+                    FilterChain filterChain) throws ServletException, IOException {
                 try {
                     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                     if (authentication instanceof IcsJwtToken jwt) {
@@ -91,4 +90,3 @@ public class SecurityConfig {
         };
     }
 }
-
