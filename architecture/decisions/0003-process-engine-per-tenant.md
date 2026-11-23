@@ -29,5 +29,5 @@ The `process` module creates one `ProcessEngine` per tenant, named with the tena
 
 ## Open points
 
-- Confirm Operaton support for Spring Boot 4.1 / Java 25. Fallback: Spring Boot 3.5.
+- Confirm Operaton support for Spring Boot 4.2 / Java 26. Fallback: Spring Boot 3.5.
 - Confirm that the shared `JpaTransactionManager` plus the proxy behaves as expected when an async continuation is followed by a JPA write in a delegate.

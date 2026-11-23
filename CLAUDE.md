@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Insurance Claim System (ICS): a multi-tenant platform for insurance companies to process claims. Monorepo with three parts:
 
-- `ics-backend/`: Spring Boot 4.1 (Java 25), Spring Modulith, JPA/Hibernate, Flyway, OAuth2 resource server
-- `ics-webapp/`: Angular 22 (standalone, Vitest for tests), `angular-oauth2-oidc` for login
+- `ics-backend/`: Spring Boot 4.2 (Java 26), Spring Modulith, JPA/Hibernate, Flyway, OAuth2 resource server
+- `webapp/`: Angular 22 (standalone, Vitest for tests), `angular-oauth2-oidc` for login
 - `ics-containers/`: docker-compose for local infra (PostgreSQL 14 + Keycloak 22)
 
 The target architecture is in `architecture/README.md`, with decision records in `architecture/decisions/`. Planned additions that are not yet in the code: Operaton (Camunda 7 fork) embedded with one engine per tenant, tenant claim processes built from registered building blocks, Spring Cloud Gateway as BFF, and PrimeNG. Read those docs before working on tenancy, processes or auth, and update the ADRs when a decision changes.
@@ -20,16 +20,16 @@ cd ics-containers && docker compose up -d
 ```
 Postgres is on `localhost:5432` (postgres/postgres) and Keycloak on `localhost:8180` (admin/admin). `init-databases.sql` creates the `ics_tenant1` and `ics_tenant2` databases.
 
-Backend (from `ics-backend/`, use `mvnw.cmd` on Windows):
+Backend (from the repo root, use `mvnw.cmd` on Windows). The root `pom.xml` is an aggregator holding the shared versions and BOMs; `ics-backend` is its only module today. Builds need JDK 26 or newer in `JAVA_HOME`.
 ```
-./mvnw spring-boot:run
+./mvnw -pl ics-backend spring-boot:run
 ./mvnw test
-./mvnw test -Dtest=IcsJwtConverterTest
+./mvnw test -Dtest=ModularityTest
 ./mvnw test -Dtest=IcsJwtConverterTest#shouldExtractTenantIdFromIssuerUrl
 ```
-`IcsBackendApplicationTests` is a full `@SpringBootTest`, so it needs Postgres running. It also holds the Spring Modulith `ApplicationModules` check.
+`IcsApplicationTest` is a full `@SpringBootTest`, so it needs Postgres running. `ModularityTest` holds the Spring Modulith `ApplicationModules.verify()` check and needs no infrastructure.
 
-Webapp (from `ics-webapp/`):
+Webapp (from `webapp/`):
 ```
 npm start        # ng serve on :4200
 npm run build
@@ -39,7 +39,7 @@ Prettier config is in `.prettierrc`.
 
 ## Backend architecture
 
-**Spring Modulith layout.** Each top-level package under `com.ics.backend` is a module (`claims`, `documents`, `common`). Only a module's root package is public: controllers sit there (e.g. `claims/ClaimsController`). Everything else lives under `<module>/internal/...` (datamodel, dto, mapper, repoository [sic], service). Other modules must not reach into `internal`; the modulith test in `IcsBackendApplicationTests` checks this.
+**Spring Modulith layout.** Each top-level package under `com.ics.backend` is a module (`claims`, `documents`, `common`). Only a module's root package is public: controllers sit there (e.g. `claims/ClaimsController`). Everything else lives under `<module>/internal/...` (datamodel, dto, mapper, repoository [sic], service). Other modules must not reach into `internal`; `ModularityTest` checks this with `ApplicationModules.verify()`. Modules are packages inside the single `ics-backend` Maven module, not separate Maven modules.
 
 **Multi-tenancy: one database per tenant, with the tenant resolved from the JWT issuer.** Several files work together:
 1. `SecurityConfig` uses `JwtIssuerAuthenticationManagerResolver` with the issuers listed in `ics.security.trusted-issuers` (`application.yaml`, bound by `SecurityProperties`). Each tenant is its own Keycloak realm.
