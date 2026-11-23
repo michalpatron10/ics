@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class IcsApplicationTest {
@@ -15,8 +15,8 @@ class IcsApplicationTest {
     private DataSource dataSource;
 
     @Test
-    void contextLoads() {
-        assertInstanceOf(MultitenantDataSource.class, dataSource);
+    void usesMultitenantDataSource() {
+        assertThat(dataSource).isInstanceOf(MultitenantDataSource.class);
     }
 
 }

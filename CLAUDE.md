@@ -25,7 +25,7 @@ Backend (from the repo root, use `mvnw.cmd` on Windows). The root `pom.xml` is a
 ./mvnw -pl ics-backend spring-boot:run
 ./mvnw test
 ./mvnw test -Dtest=ModularityTest
-./mvnw test -Dtest=IcsJwtConverterTest#shouldExtractTenantIdFromIssuerUrl
+./mvnw test -Dtest=IcsJwtConverterTest#extractsTenantIdFromIssuerUrl
 ```
 `IcsApplicationTest` is a full `@SpringBootTest`, so it needs Postgres running. `ModularityTest` holds the Spring Modulith `ApplicationModules.verify()` check and needs no infrastructure.
 
@@ -42,7 +42,14 @@ Prettier config is in `.prettierrc`.
 **Code style.**
 - Never use wildcard imports (`import jakarta.persistence.*;`, `import static ...Assertions.*;`). Import each class or static member explicitly.
 - Exactly one blank line between the `package` statement and the imports.
-- In tests, use static imports for assertions and other test helpers: `assertEquals(...)`, not `Assertions.assertEquals(...)`. Import each method explicitly (`import static org.junit.jupiter.api.Assertions.assertEquals;`), never with `*`. Outside tests, don't use static imports.
+- In tests, use static imports for assertions and other test helpers: `assertThat(...)`, not `Assertions.assertThat(...)`. Import each method explicitly (`import static org.assertj.core.api.Assertions.assertThat;`), never with `*`. Outside tests, don't use static imports.
+- No commented-out code; git keeps the history. Comments explain *why*, not what. Postponed work is a `// TODO <reason>`.
+- Naming: no `Interface` suffix (and no interface at all while there is a single implementation), camelCase for variables, no raw generic types (`List<?>`, not `List`).
+- DTOs are records. JPA entities stay classes.
+- Never call `Optional.get()`. Use `orElseThrow(...)` with an exception that maps to the right HTTP status (e.g. `ClaimNotFoundException` → 404).
+- Constructor injection with `final` fields in main code. Field `@Autowired` only in tests.
+- `var` only when the type is obvious from the right-hand side (`var list = new ArrayList<String>()`), otherwise write the type.
+- Tests: AssertJ (`assertThat`), not JUnit assertions. Test method names describe the behaviour without a prefix: `extractsTenantIdFromIssuerUrl`, not `shouldExtractTenantIdFromIssuerUrl` or `testExtract...`.
 
 **Spring Modulith layout.** Each top-level package under `com.ics.backend` is a module (`claims`, `documents`, `common`). Only a module's root package is public: controllers sit there (e.g. `claims/ClaimsController`). Everything else lives under `<module>/internal/...` (datamodel, dto, mapper, repository, service). Other modules must not reach into `internal`; `ModularityTest` checks this with `ApplicationModules.verify()`. Modules are packages inside the single `ics-backend` Maven module, not separate Maven modules.
 

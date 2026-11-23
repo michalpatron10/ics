@@ -7,7 +7,7 @@ import com.ics.backend.claims.internal.repository.ClaimRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ClaimService implements ClaimServiceInterface {
+public class ClaimService {
 
     private final ClaimRepository claimRepository;
 
@@ -15,12 +15,11 @@ public class ClaimService implements ClaimServiceInterface {
         this.claimRepository = claimRepository;
     }
 
-    @Override
     public ClaimDto getClaimById(Long id) {
-        return ClaimMapper.toDto(claimRepository.findById(id).get());
+        Claim claim = claimRepository.findById(id).orElseThrow(() -> new ClaimNotFoundException(id));
+        return ClaimMapper.toDto(claim);
     }
 
-    @Override
     public Long createClaim(ClaimDto claimDto) {
         Claim savedClaim = claimRepository.save(ClaimMapper.toEntity(claimDto));
         return savedClaim.getId();

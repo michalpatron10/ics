@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,7 +40,7 @@ public class SecurityConfig {
         AuthenticationManagerResolver<HttpServletRequest> authenticationManagerResolver = request -> {
             AuthenticationManager delegate = issuerAuthenticationManagerResolver.resolve(request);
             return authentication -> {
-                var authenticated = delegate.authenticate(authentication);
+                Authentication authenticated = delegate.authenticate(authentication);
                 if (authenticated instanceof JwtAuthenticationToken jwtAuthentication) {
                     return customJwtConverter().convert(jwtAuthentication.getToken());
                 }
@@ -73,7 +74,7 @@ public class SecurityConfig {
                     FilterChain filterChain
             ) throws ServletException, IOException {
                 try {
-                    var authentication = SecurityContextHolder.getContext().getAuthentication();
+                    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                     if (authentication instanceof IcsJwtToken jwt) {
                         String tenantId = jwt.getTenantId();
                         if (tenantId == null || tenantId.isBlank()) {

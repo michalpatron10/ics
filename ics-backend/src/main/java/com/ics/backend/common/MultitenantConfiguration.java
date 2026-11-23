@@ -17,7 +17,6 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 @Configuration
 public class MultitenantConfiguration {
 
-    /*@Value("${defaultTenant}")*/
     private String defaultTenant = "ics_tenant1";
 
     @Bean
