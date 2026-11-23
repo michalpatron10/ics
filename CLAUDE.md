@@ -42,6 +42,7 @@ Prettier config is in `.prettierrc`.
 **Code style.**
 - Never use wildcard imports (`import jakarta.persistence.*;`, `import static ...Assertions.*;`). Import each class or static member explicitly.
 - Exactly one blank line between the `package` statement and the imports.
+- In tests, use static imports for assertions and other test helpers: `assertEquals(...)`, not `Assertions.assertEquals(...)`. Import each method explicitly (`import static org.junit.jupiter.api.Assertions.assertEquals;`), never with `*`. Outside tests, don't use static imports.
 
 **Spring Modulith layout.** Each top-level package under `com.ics.backend` is a module (`claims`, `documents`, `common`). Only a module's root package is public: controllers sit there (e.g. `claims/ClaimsController`). Everything else lives under `<module>/internal/...` (datamodel, dto, mapper, repoository [sic], service). Other modules must not reach into `internal`; `ModularityTest` checks this with `ApplicationModules.verify()`. Modules are packages inside the single `ics-backend` Maven module, not separate Maven modules.
 

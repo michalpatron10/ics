@@ -1,8 +1,5 @@
 package com.ics.backend.common;
 
-import com.ics.backend.common.IcsJwtConverter;
-import com.ics.backend.common.IcsJwtToken;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.jwt.Jwt;
 
@@ -28,9 +25,9 @@ class IcsJwtConverterTest {
 
         IcsJwtToken token = converter.convert(jwt);
 
-        Assertions.assertEquals("ics_tenant1", token.getTenantId());
-        Assertions.assertEquals("John", token.getFirstname());
-        Assertions.assertEquals("Doe", token.getLastname());
+        assertEquals("ics_tenant1", token.getTenantId());
+        assertEquals("John", token.getFirstname());
+        assertEquals("Doe", token.getLastname());
     }
 
     @Test
@@ -44,7 +41,7 @@ class IcsJwtConverterTest {
 
         IcsJwtToken token = converter.convert(jwt);
 
-        Assertions.assertEquals("ics_tenant2", token.getTenantId());
+        assertEquals("ics_tenant2", token.getTenantId());
     }
 
     @Test
@@ -58,6 +55,6 @@ class IcsJwtConverterTest {
 
         IcsJwtToken token = converter.convert(jwt);
 
-        Assertions.assertNull(token.getTenantId());
+        assertNull(token.getTenantId());
     }
 }
