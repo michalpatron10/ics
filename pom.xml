@@ -81,23 +81,37 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <!-- Code style (see CLAUDE.md "Code style"). `./mvnw spotless:apply` formats,
-                 `./mvnw verify` fails when a file is not formatted. -->
+            <!-- Code style rules (see CLAUDE.md "Code style"). Not a full formatter: it checks imports and
+                 whitespace only. `./mvnw spotless:apply` fixes what it can, `./mvnw verify` fails on violations. -->
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
                 <version>${spotless.version}</version>
                 <configuration>
                     <java>
-                        <eclipse>
-                            <file>${maven.multiModuleProjectDirectory}/eclipse-formatter.prefs</file>
-                        </eclipse>
                         <!-- One block of regular imports, then one block of static imports. -->
                         <importOrder>
                             <order>,\#</order>
                         </importOrder>
                         <removeUnusedImports/>
                         <forbidWildcardImports/>
+                        <replaceRegex>
+                            <name>One blank line after package</name>
+                            <!-- Reuses the captured newline: Maven trims whitespace from the replacement. -->
+                            <searchRegex>(package [^;\n]+;(\n))\n*</searchRegex>
+                            <replacement>$1$2</replacement>
+                        </replaceRegex>
+                        <replaceRegex>
+                            <name>At most one blank line in a row</name>
+                            <searchRegex>(\n)\n\n+</searchRegex>
+                            <replacement>$1$1</replacement>
+                        </replaceRegex>
+                        <indent>
+                            <spaces>true</spaces>
+                            <spacesPerTab>4</spacesPerTab>
+                        </indent>
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
                     </java>
                 </configuration>
                 <executions>

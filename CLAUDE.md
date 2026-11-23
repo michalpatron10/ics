@@ -26,7 +26,7 @@ Backend (from the repo root, use `mvnw.cmd` on Windows). The root `pom.xml` is a
 ./mvnw test
 ./mvnw test -Dtest=ModularityTest
 ./mvnw test -Dtest=IcsJwtConverterTest#extractsTenantIdFromIssuerUrl
-./mvnw spotless:apply   # format code (Spotless, Eclipse formatter); `./mvnw verify` fails on unformatted code
+./mvnw spotless:apply   # fix imports and blank lines (Spotless); `./mvnw verify` fails on violations
 ```
 `IcsApplicationTest` is a full `@SpringBootTest`, so it needs Postgres running. `ModularityTest` holds the Spring Modulith `ApplicationModules.verify()` check and needs no infrastructure.
 
@@ -40,7 +40,7 @@ Prettier config is in `.prettierrc`.
 
 ## Backend architecture
 
-**Code style.** Formatting, import order and the wildcard-import ban are enforced by Spotless (root `pom.xml`, formatter settings in `eclipse-formatter.prefs`): run `./mvnw spotless:apply` before committing. The rest are review rules.
+**Code style.** Spotless (configured inline in the root `pom.xml`, no extra files) enforces the import rules, blank lines, spaces instead of tabs and no trailing whitespace: run `./mvnw spotless:apply` before committing. It is not a full formatter (line wrapping is up to the IDE). The rest are review rules.
 - Never use wildcard imports (`import jakarta.persistence.*;`, `import static ...Assertions.*;`). Import each class or static member explicitly.
 - Exactly one blank line between the `package` statement and the imports.
 - Import order: one alphabetical block of regular imports, one blank line, then static imports (tests only).
