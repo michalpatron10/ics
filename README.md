@@ -56,7 +56,7 @@ ics/
 │           ├── db/operaton/        # (planned) Operaton DDL vendored as Flyway scripts
 │           └── processes/reference/  # (planned) reference BPMN + DMN copied to new tenants
 ├── ics-gateway/                    # (planned) Spring Cloud Gateway (BFF)
-├── webapp/                         # Angular + PrimeNG
+├── ics-webapp/                     # Angular + PrimeNG
 │   └── src/app/
 │       ├── core/                   # (planned) auth/session, tenant config, HTTP
 │       ├── claims/  tasks/  documents/  admin/   # (planned)

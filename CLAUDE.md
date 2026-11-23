@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Insurance Claim System (ICS): a multi-tenant platform for insurance companies to process claims. Monorepo with three parts:
 
 - `ics-backend/`: Spring Boot 4.2 (Java 26), Spring Modulith, JPA/Hibernate, Flyway, OAuth2 resource server
-- `webapp/`: Angular 22 (standalone, Vitest for tests), `angular-oauth2-oidc` for login
+- `ics-webapp/`: Angular 22 (standalone, Vitest for tests), `angular-oauth2-oidc` for login
 - `ics-containers/`: docker-compose for local infra (PostgreSQL 14 + Keycloak 22)
 
 The target architecture is in `architecture/README.md`, with decision records in `architecture/decisions/`. Planned additions that are not yet in the code: Operaton (Camunda 7 fork) embedded with one engine per tenant, tenant claim processes built from registered building blocks, Spring Cloud Gateway as BFF, and PrimeNG. Read those docs before working on tenancy, processes or auth, and update the ADRs when a decision changes.
@@ -29,7 +29,7 @@ Backend (from the repo root, use `mvnw.cmd` on Windows). The root `pom.xml` is a
 ```
 `IcsApplicationTest` is a full `@SpringBootTest`, so it needs Postgres running. `ModularityTest` holds the Spring Modulith `ApplicationModules.verify()` check and needs no infrastructure.
 
-Webapp (from `webapp/`):
+Webapp (from `ics-webapp/`):
 ```
 npm start        # ng serve on :4200
 npm run build
