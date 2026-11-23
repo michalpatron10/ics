@@ -1,6 +1,5 @@
 package com.ics.backend.claims.internal.mapper;
 
-
 import com.ics.backend.claims.internal.datamodel.Claim;
 import com.ics.backend.claims.internal.dto.ClaimDto;
 

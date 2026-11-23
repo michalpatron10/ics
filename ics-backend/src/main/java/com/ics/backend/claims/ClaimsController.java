@@ -1,6 +1,5 @@
 package com.ics.backend.claims;
 
-
 import com.ics.backend.claims.internal.dto.ClaimDto;
 import com.ics.backend.claims.internal.service.ClaimServiceInterface;
 import org.springframework.security.access.prepost.PreAuthorize;
