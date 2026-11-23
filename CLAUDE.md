@@ -39,6 +39,8 @@ Prettier config is in `.prettierrc`.
 
 ## Backend architecture
 
+**Code style.** Never use wildcard imports (`import jakarta.persistence.*;`, `import static ...Assertions.*;`). Import each class or static member explicitly.
+
 **Spring Modulith layout.** Each top-level package under `com.ics.backend` is a module (`claims`, `documents`, `common`). Only a module's root package is public: controllers sit there (e.g. `claims/ClaimsController`). Everything else lives under `<module>/internal/...` (datamodel, dto, mapper, repoository [sic], service). Other modules must not reach into `internal`; `ModularityTest` checks this with `ApplicationModules.verify()`. Modules are packages inside the single `ics-backend` Maven module, not separate Maven modules.
 
 **Multi-tenancy: one database per tenant, with the tenant resolved from the JWT issuer.** Several files work together:
