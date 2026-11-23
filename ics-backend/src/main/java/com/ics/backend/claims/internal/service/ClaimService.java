@@ -3,7 +3,7 @@ package com.ics.backend.claims.internal.service;
 import com.ics.backend.claims.internal.datamodel.Claim;
 import com.ics.backend.claims.internal.dto.ClaimDto;
 import com.ics.backend.claims.internal.mapper.ClaimMapper;
-import com.ics.backend.claims.internal.repoository.ClaimRepository;
+import com.ics.backend.claims.internal.repository.ClaimRepository;
 import org.springframework.stereotype.Service;
 
 @Service
