@@ -40,7 +40,7 @@ Prettier config is in `.prettierrc`.
 
 ## Backend architecture
 
-**Code style.** Spotless (configured inline in the root `pom.xml`, no extra files) enforces the import rules, blank lines, spaces instead of tabs and no trailing whitespace: run `./mvnw spotless:apply` before committing. It is not a full formatter (line wrapping is up to the IDE). The rest are review rules.
+**Code style.** Spotless (configured inline in the root `pom.xml`) enforces the import rules, blank lines, spaces instead of tabs and no trailing whitespace: run `./mvnw spotless:apply` before committing. It is not a full formatter (line wrapping is up to the IDE). The root `.editorconfig` mirrors these rules for IntelliJ (imports, blank lines); keep both in sync when a rule changes. The rest are review rules.
 - Never use wildcard imports (`import jakarta.persistence.*;`, `import static ...Assertions.*;`). Import each class or static member explicitly.
 - Exactly one blank line between the `package` statement and the imports.
 - Import order: one alphabetical block of regular imports, one blank line, then static imports (tests only).
