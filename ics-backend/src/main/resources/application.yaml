@@ -14,5 +14,5 @@ logging:
 ics:
   security:
     trusted-issuers:
-      - http://localhost:8180/realms/ics_tenant1
-      - http://localhost:8180/realms/ics_tenant2
+      - http://localhost:8180/realms/pzu
+      - http://localhost:8180/realms/warta
